@@ -85,7 +85,7 @@ public class Application {
             System.out.println("Salvataggio in corso");
             FileUtils.writeStringToFile(file,productString, StandardCharsets.UTF_8);
             try {
-                Thread.sleep(2000); //java. lang. InterruptedException senza try/catch
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -102,7 +102,7 @@ public class Application {
         try {
             letto = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
             try {
-                Thread.sleep(2000); //java. lang. InterruptedException senza try/catch
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
