@@ -71,8 +71,10 @@ public class Application {
         System.out.println("---------------------Totale per categoria---------------------------");
         Map<Categories, Double> totByCategory = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
         totByCategory.forEach(((categories, aDouble) -> System.out.println("Category: " + categories + ", totale: " + aDouble)));
+        System.out.println("---------------------Salvataggio prodotti su disco---------------------------");
         File file = new File("src/info.txt");
         saveOnDisc(allProducts, file);
+        System.out.println("---------------------Lettura prodotti da disco---------------------------");
         List<Product> readed = readProductsFromDisc(file);
         readed.forEach(System.out::println);
     }
