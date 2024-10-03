@@ -6,10 +6,8 @@ import CarmineGargiulo.Ecommerce.Order;
 import CarmineGargiulo.Ecommerce.Product;
 import com.github.javafaker.Faker;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) {
@@ -44,5 +42,9 @@ public class Application {
         allProducts.forEach(System.out::println);
         System.out.println("---------------------Orders-----------------------------");
         allOrders.forEach(System.out::println);
+        System.out.println("---------------------Ordini per cliente---------------------------");
+        Map<Customer, List<Order>> ordersByCustomer = allOrders.stream().collect(Collectors.groupingBy(Order::getCustomer));
+        ordersByCustomer.forEach(((customer, orders) -> System.out.println(customer + ": " + orders)));
+
     }
 }
