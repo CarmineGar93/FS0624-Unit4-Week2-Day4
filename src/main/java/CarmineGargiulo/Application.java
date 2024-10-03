@@ -5,7 +5,11 @@ import CarmineGargiulo.Ecommerce.Customer;
 import CarmineGargiulo.Ecommerce.Order;
 import CarmineGargiulo.Ecommerce.Product;
 import com.github.javafaker.Faker;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,5 +71,24 @@ public class Application {
         System.out.println("---------------------Totale per categoria---------------------------");
         Map<Categories, Double> totByCategory = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
         totByCategory.forEach(((categories, aDouble) -> System.out.println("Category: " + categories + ", totale: " + aDouble)));
+        saveOnDisc(allProducts);
+    }
+
+    public static void saveOnDisc(List<Product> products){
+        File file = new File("src/info.txt");
+        String productString = products.stream().map(product -> product.getName() + "@" + product.getCategory() + "@" + product.getPrice()).collect(Collectors.joining("#"));
+        try {
+            System.out.println("Salvataggio in corso");
+            FileUtils.writeStringToFile(file,productString, StandardCharsets.UTF_8);
+            try {
+                Thread.sleep(2000); //java. lang. InterruptedException senza try/catch
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Salvataggio completato");
+        }catch (IOException e){
+            System.out.println("errore nel salvataggio del file");
+        }
+
     }
 }
