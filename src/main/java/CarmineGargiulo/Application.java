@@ -71,11 +71,13 @@ public class Application {
         System.out.println("---------------------Totale per categoria---------------------------");
         Map<Categories, Double> totByCategory = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
         totByCategory.forEach(((categories, aDouble) -> System.out.println("Category: " + categories + ", totale: " + aDouble)));
-        saveOnDisc(allProducts);
+        File file = new File("src/info.txt");
+        saveOnDisc(allProducts, file);
+        List<Product> readed = readProductsFromDisc(file);
+        readed.forEach(System.out::println);
     }
 
-    public static void saveOnDisc(List<Product> products){
-        File file = new File("src/info.txt");
+    public static void saveOnDisc(List<Product> products, File file){
         String productString = products.stream().map(product -> product.getName() + "@" + product.getCategory() + "@" + product.getPrice()).collect(Collectors.joining("#"));
         try {
             System.out.println("Salvataggio in corso");
@@ -90,5 +92,24 @@ public class Application {
             System.out.println("errore nel salvataggio del file");
         }
 
+    }
+
+    public static List<Product> readProductsFromDisc(File file){
+        String letto = "";
+        try {
+            letto = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.out.println("Errore nella lettura del file");
+        }
+        System.out.println(letto);
+        List<String> splitted = Arrays.stream(letto.split("#")).toList();
+        List<String[]> listSplitted = splitted.stream().map(s -> s.split("@")).toList();
+        List<Product> result = new ArrayList<>();
+        listSplitted.stream().forEach(array -> {
+            Categories categories = Categories.valueOf(array[1]);
+            Product prodotto = new Product(array[0], categories, Double.parseDouble(array[2]));
+            result.add(prodotto);
+        });
+        return result;
     }
 }
