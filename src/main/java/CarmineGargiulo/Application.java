@@ -61,5 +61,11 @@ public class Application {
         List<Product> mostExpensiveProducts = allProducts.stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed()).limit(10).toList();
         mostExpensiveProducts.forEach(System.out::println);
         System.out.println("---------------------Media ordini---------------------------");
+        OptionalDouble averageOrders = allOrders.stream().mapToDouble(order -> order.getProducts().stream().mapToDouble(Product::getPrice).sum()).average();
+        if(averageOrders.isPresent()) System.out.println("La media degli ordini fatti da tutti i clienti è di: " + averageOrders.getAsDouble());
+        else System.out.println("Lista vuota");
+        System.out.println("---------------------Totale per categoria---------------------------");
+        Map<Categories, Double> totByCategory = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
+        totByCategory.forEach(((categories, aDouble) -> System.out.println("Category: " + categories + ", totale: " + aDouble)));
     }
 }
