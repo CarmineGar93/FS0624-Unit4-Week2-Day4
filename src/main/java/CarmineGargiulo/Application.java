@@ -96,12 +96,18 @@ public class Application {
 
     public static List<Product> readProductsFromDisc(File file){
         String letto = "";
+        System.out.println("Lettura in corso");
         try {
             letto = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            try {
+                Thread.sleep(2000); //java. lang. InterruptedException senza try/catch
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         } catch (IOException e) {
             System.out.println("Errore nella lettura del file");
         }
-        System.out.println(letto);
+        System.out.println("File caricato correttamente");
         List<String> splitted = Arrays.stream(letto.split("#")).toList();
         List<String[]> listSplitted = splitted.stream().map(s -> s.split("@")).toList();
         List<Product> result = new ArrayList<>();
