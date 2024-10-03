@@ -19,7 +19,7 @@ public class Application {
         Random ran = new Random();
         List<Product> allProducts = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
-            int randomCat = ran.nextInt(1, 5);
+            int randomCat = ran.nextInt(1, 6);
             Categories category = switch (randomCat){
                 case 1 -> Categories.BABY;
                 case 2 -> Categories.BOYS;
