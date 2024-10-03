@@ -60,5 +60,6 @@ public class Application {
         System.out.println("---------------------Prodotti piu costosi---------------------------");
         List<Product> mostExpensiveProducts = allProducts.stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed()).limit(10).toList();
         mostExpensiveProducts.forEach(System.out::println);
+        System.out.println("---------------------Media ordini---------------------------");
     }
 }
