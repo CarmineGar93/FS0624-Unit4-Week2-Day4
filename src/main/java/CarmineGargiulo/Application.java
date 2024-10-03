@@ -28,12 +28,20 @@ public class Application {
         }
         List<Customer> allCustomers = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
-            allCustomers.add(new Customer(faker.harryPotter().character(), ran.nextInt(1,5)));
+            String randomCustomer = faker.harryPotter().character();
+            while(true){
+                String finalRandomCustomer = randomCustomer;
+                if(allCustomers.stream().anyMatch(customer -> customer.getName().equals(finalRandomCustomer))){
+                    randomCustomer = faker.harryPotter().character();
+                }
+                else break;
+            }
+            allCustomers.add(new Customer(randomCustomer, ran.nextInt(1,5)));
         }
         List<Order> allOrders = new ArrayList<>();
         for (int i = 0; i < 20; i++){
             List<Product> productsOrdered = new ArrayList<>();
-            for (int j = 0; j < ran.nextInt(1,5); j++) {
+            for (int j = 0; j < ran.nextInt(1,2); j++) {
                 productsOrdered.add(allProducts.get(ran.nextInt(0, allProducts.size() - 1)));
             }
             allOrders.add(new Order(productsOrdered, allCustomers.get(ran.nextInt(0, allCustomers.size() - 1))));
@@ -45,6 +53,12 @@ public class Application {
         System.out.println("---------------------Ordini per cliente---------------------------");
         Map<Customer, List<Order>> ordersByCustomer = allOrders.stream().collect(Collectors.groupingBy(Order::getCustomer));
         ordersByCustomer.forEach(((customer, orders) -> System.out.println(customer + ": " + orders)));
-
+        System.out.println("---------------------Totale speso per cliente---------------------------");
+        Map<Customer, Double> totByCustomer = allOrders.stream().collect(Collectors.groupingBy
+                (Order::getCustomer, Collectors.summingDouble(order -> order.getProducts().stream().mapToDouble(Product::getPrice).sum())));
+        totByCustomer.forEach(((customer, totprice) -> System.out.println(customer + " totale speso: " + totprice)));
+        System.out.println("---------------------Prodotti piu costosi---------------------------");
+        List<Product> mostExpensiveProducts = allProducts.stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed()).limit(10).toList();
+        mostExpensiveProducts.forEach(System.out::println);
     }
 }
